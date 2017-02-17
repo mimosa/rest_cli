@@ -24,24 +24,30 @@ module Faraday
       env[:request_headers]['Referer'] ||= 'http://www.' + domain
       
       @app.call(env).on_complete do |env|
-        # 
-        set_cookies(env, domain)
-        
-        # 解压
-        case env.response_headers['Content-Encoding']
-        when /gzip/i
-          decode_body(env, &method(:uncompress))
-        when /deflate/i
-          decode_body(env, &method(:inflate))
-        end
+        # Follow redirects
+        if env.response_headers.key?('Location')
+          env[:url] = env.response_headers['Location']
+          call(env)
+        else
+          # Cookie
+          set_cookies(env, domain)
+          
+          # 解压
+          case env.response_headers['Content-Encoding']
+          when /gzip/i
+            decode_body(env, &method(:uncompress))
+          when /deflate/i
+            decode_body(env, &method(:inflate))
+          end
 
-        # 解析
-        case env.request_headers['Accept'] || env.response_headers['Content-Type']
-        when /^text\/html/
-          reset_body(env, &method(:parse_html))
-        when /^application\/(vnd\..+\+)?json/
-          reset_body(env, &method(:parse_json))
-        end if env.status.between?(200, 201)
+          # 解析
+          case env.request_headers['Accept'] || env.response_headers['Content-Type']
+          when /^text\/html/
+            reset_body(env, &method(:parse_html))
+          when /^application\/(vnd\..+\+)?json/
+            reset_body(env, &method(:parse_json))
+          end if env.status.between?(200, 201)
+        end
       end
     end
 
