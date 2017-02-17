@@ -6,22 +6,21 @@ class YunPian < RestCli
     @params = {
       apikey: key
     }
-    
+
     super('https://sms.yunpian.com/v2')
   end
 
   def send(mobile, content, sign)
     raw = send_sms(mobile, "#{content}【#{sign}】")
-    raw && raw[:code] == 0
+    raw && raw[:code].zero?
   end
 
   private
 
-    def send_sms(mobile, message)
-      self.post('sms/single_send.json', {
-          mobile: mobile,
-          text: message
-        }.merge(@params)
-      )
-    end
+  def send_sms(mobile, message)
+    self.post('sms/single_send.json', {
+      mobile: mobile,
+      text: message
+    }.merge(@params))
+  end
 end

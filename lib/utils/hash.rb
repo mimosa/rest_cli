@@ -1,14 +1,16 @@
 # -*- encoding: utf-8 -*-
-
 module Utils
   module Hash
     def to_query(params = self, prefix = nil)
       params.sort.map do |key, value|
-        key, value = '', key      if value.nil? # Array
+        if value.nil? # Array
+          key   = ''
+          value = key
+        end
         key = "#{prefix}[#{key}]" if prefix # Hash & Array
 
-        if value.kind_of?(Array) || value.kind_of?(Hash)
-          self.to_query(value, key)
+        if value.is_a?(Array) || value.is_a?(Hash)
+          to_query(value, key)
         else
           "#{key}=#{value}"
         end

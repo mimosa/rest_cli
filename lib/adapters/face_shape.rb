@@ -9,14 +9,14 @@ class FaceShape < RestCli
   def get(url)
     data = shape(url)
     if data.nil? || data[:face].empty?
-      data = { is_shape: false }
+      data = {is_shape: false}
     else
       data.merge!(data.delete(:face))
       # 数据扁平化处理
       data.merge!(data.delete(:attribute).delete(:faceShape))
       data.merge!(data.delete(:position))
 
-      if data.has_key?(:forehead_center) && data[:forehead_center].values.min == 0.0
+      if data.key?(:forehead_center) && data[:forehead_center].values.min.zero?
         data.delete(:forehead_center)
       end
     end
@@ -25,7 +25,7 @@ class FaceShape < RestCli
 
   private
 
-    def shape(url)
-      self.request(:get, '/faceinfo', { url: url }, { accept: 'application/json;level=1' })
-    end
+  def shape(url)
+    self.request(:get, '/faceinfo', {url: url}, {accept: 'application/json;level=1'})
+  end
 end

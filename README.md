@@ -16,10 +16,12 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-require 'examples/bilibili_cli'
+require 'adapters/bilibili_api'
+require 'adapters/bilibili_player'
 
 yestoday = (Date.today-1)
-b = BilibiliCli.new(yestoday)
+b = BilibiliApi.new(yestoday)
+p = BilibiliPlayer.new
 
 episodes = b.episodes_by_name('搞笑')
 
@@ -27,13 +29,13 @@ File.open('bili_#{yestoday}.json', 'wb') do |f|
   f.write MultiJson.dump(episodes: episodes) 
 end unless episodes.nil?
 
-video_url = b.url_by_id('av7312865')
+video_url = p.video_url('av290914')
 
-comments = b.comments_by_id('av7312865')
+comments = b.comments_by_id('av290914')
 ```
 
 ```ruby
-require 'examples/kuaidi100'
+require 'adapters/kuaidi100'
 
 k = Kuaidi100.new
 k.trace(611382431237)
@@ -59,14 +61,14 @@ k.trace(611382431237)
 
 
 ```ruby
-require 'examples/yun_pian'
+require 'adapters/yun_pian'
 
 y = YunPian.new(apikey)
 y.send(mobile, text, sign)
 ```
 
 ```ruby
-require 'examples/ipeen'
+require 'adapters/ipeen'
 
 i = Ipeen.new
 

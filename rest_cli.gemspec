@@ -28,4 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'typhoeus', '~> 1.1', '>= 1.1.2'
   spec.add_runtime_dependency 'oj', '~> 2.18', '>= 2.18.1'
   spec.add_runtime_dependency 'addressable', '~> 2.5'
+  spec.add_runtime_dependency 'parallel', '~> 1.10'
+
+  spec.add_development_dependency 'rubocop', '~> 0.47.1'
 end

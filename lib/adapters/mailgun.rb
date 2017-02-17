@@ -15,7 +15,7 @@ class Mailgun < RestCli
       html: body,
       to: to
     }
-    
+
     send_mail(params)
   end
 
@@ -26,8 +26,8 @@ class Mailgun < RestCli
 
   private
 
-    def send_mail(params)
-      return false if @domain.nil?
-      self.post("#{@domain}/messages", params)
-    end
+  def send_mail(params)
+    return false if @domain.nil?
+    self.post("#{@domain}/messages", params)
+  end
 end

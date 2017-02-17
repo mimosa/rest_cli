@@ -11,8 +11,8 @@ class Facexx3 < RestCli
     data = detect(url)
     puts data
     if data.nil? || data[:faces].empty?
-      data = { is_face: false }
-    else # 数据扁平化处理
+      data = {is_face: false}
+    else # flatten
       data.merge!(data.delete(:faces)[0]) # 只获取最大的一张脸
       data.merge!(data.delete(:attributes))
       data[:face_id] = data.delete(:face_token)
@@ -22,30 +22,28 @@ class Facexx3 < RestCli
 
   def facesets
     raw = self.post('faceset/getfacesets')
-    raw.delete(:facesets) unless raw.nil?
+    raw&.delete(:facesets)
   end
 
   # private
 
-    def detect(url)
-      params = {
-        image_url: url, 
-        return_landmark: 1,
-        return_attributes: 'gender,age'
-      }
+  def detect(url)
+    params = {
+      image_url: url,
+      return_landmark: 1,
+      return_attributes: 'gender,age'
+    }
 
-      self.post('detect', params)
-    end
+    self.post('detect', params)
+  end
 
+  def search(face_id, limit = 5)
+    params = {
+      face_token: face_id,
+      faceset_token: '30e2d43d43c3ca4a78b86cee76226eea',
+      return_result_count: limit
+    }
 
-
-    def search(face_id, limit = 5)
-      params = {
-        face_token: face_id, 
-        faceset_token: '30e2d43d43c3ca4a78b86cee76226eea',
-        return_result_count: 5
-      }
-
-      self.post('search', params)
-    end
+    self.post('search', params)
+  end
 end

@@ -2,18 +2,17 @@
 require 'rest_cli'
 
 class Pingxx < RestCli
-  
   def initialize(configs)
     configs.symbolize_keys!
     configs.assert_valid_keys(:key, :secret, :host, :protocol, :private_key, :public_key)
 
     @params = {
-      app: { id: configs.delete(:key) },
+      app: {id: configs.delete(:key)},
       currency: 'cny'
     }
 
-    @private_key = OpenSSL::PKey.read configs.delete(:private_key) if configs.has_key?(:private_key)
-    @public_key  = OpenSSL::PKey.read configs.delete(:public_key)  if configs.has_key?(:public_key)
+    @private_key = OpenSSL::PKey.read configs.delete(:private_key) if configs.key?(:private_key)
+    @public_key  = OpenSSL::PKey.read configs.delete(:public_key)  if configs.key?(:public_key)
 
     super('https://api.pingxx.com/v1')
   end
@@ -22,10 +21,10 @@ class Pingxx < RestCli
     billing.symbolize_keys!
     billing.assert_valid_keys(:order_no, :amount, :channel, :client_ip, :subject, :body, :metadata, :time_expire)
 
-    headers = { content_type: 'application/json' }
-    
+    headers = {content_type: 'application/json'}
+
     billing[:time_expire] ||= 15.minutes.from_now.to_i
-    billing[:amount]      = billing.delete(:amount) * 100 # 单位为分
+    billing[:amount] = billing.delete(:amount) * 100 # 单位为分
 
     payload = billing.merge(@params).to_json
 
@@ -40,7 +39,7 @@ class Pingxx < RestCli
 
   private
 
-    def signature(payload)
-      Base64.strict_encode64 @private_key.sign(OpenSSL::Digest::SHA256.new, payload)
-    end
+  def signature(payload)
+    Base64.strict_encode64 @private_key.sign(OpenSSL::Digest::SHA256.new, payload)
+  end
 end
