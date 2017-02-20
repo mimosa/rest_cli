@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
-require 'faraday'                    unless defined?(::Faraday)
-require 'typhoeus/adapters/faraday'  unless defined?(::Typhoeus)
-require 'faraday/awesome'            unless defined?(::Faraday::Awesome)
-require 'utils/hash'                 unless Hash.respond_to?(:to_query)
+require 'faraday'
+require 'typhoeus/adapters/faraday'
+require 'faraday/awesome'
+require 'utils/hash' unless Hash.respond_to?(:to_query)
 
 class RestCli
   def initialize(endpoint)
@@ -40,11 +40,11 @@ class RestCli
                             ]
       #
       conn.use      :awesome
-      conn.response :logger
+      # conn.response :logger
       conn.adapter  :typhoeus
       # timeout
-      conn.options.open_timeout = 10
-      conn.options.timeout = 10
+      # conn.options.open_timeout = 10
+      # conn.options.timeout = 10
     end
   end
 
