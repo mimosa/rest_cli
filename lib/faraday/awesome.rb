@@ -58,11 +58,11 @@ module Faraday
     end
 
     def ip?(uri)
-      uri.host.match?(/\d+{1,3}\.\d+{1,3}\.\d+{1,3}\.\d+{1,3}/)
+      uri.host =~ /\d+{1,3}\.\d+{1,3}\.\d+{1,3}\.\d+{1,3}/
     end
 
     def reset_user_agent(env)
-      if env[:request_headers]['User-Agent'].match?(/Faraday/)
+      if env[:request_headers]['User-Agent']  =~ /Faraday/
         env[:request_headers]['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) '\
                                               'AppleWebKit/537.36 (KHTML, like Gecko) '\
                                               'Chrome/34.0.1847.116 Safari/537.36'
